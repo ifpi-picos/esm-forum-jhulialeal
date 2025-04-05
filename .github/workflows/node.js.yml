@@ -31,10 +31,20 @@ jobs:
         run: mkdir -p bd
 
       - name: 🧱 Criar banco de produção (esmforum.db)
-        run: sqlite3 ./bd/esmforum.db < ./bd/schema.sql
+        run: |
+          if [ -f ./bd/esmforum.db ]; then
+            echo "🧨 Arquivo esmforum.db já existe. Apagando..."
+            rm ./bd/esmforum.db
+          fi
+          sqlite3 ./bd/esmforum.db < ./bd/schema.sql
 
       - name: 🧪 Criar banco de testes (esmforum-teste.db)
-        run: sqlite3 ./bd/esmforum-teste.db < ./bd/schema.sql
+        run: |
+          if [ -f ./bd/esmforum-teste.db ]; then
+            echo "🧨 Arquivo esmforum-teste.db já existe. Apagando..."
+            rm ./bd/esmforum-teste.db
+          fi
+          sqlite3 ./bd/esmforum-teste.db < ./bd/schema.sql
 
       - name: ✅ Rodar testes
         run: npm test
